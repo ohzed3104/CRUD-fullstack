@@ -48,6 +48,7 @@ export const initProductController = (model) => {
     deleteProduct : async (req,res) => {
       try{
         const {id} = req.params;
+        console.log("Delete Product ID:", id);
         const resutles = await productModel.delete(id);
         res.status(200).json({
           message : resutles.message,
