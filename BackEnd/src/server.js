@@ -13,6 +13,10 @@ import crudProductRoutes from "./routes/ProductRoutes.js";
 import { initUserModel } from "./models/UserModels.js";
 import { initUserController } from "./controllers/UserControllers.js";
 import crudUserRoutes from "./routes/UserRoutes.js";
+//auth
+import { initAuthModel } from "./models/authModels.js";
+import { initAuthController } from "./controllers/authControllers.js";
+import crRoutes from "./routes/authRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -32,7 +36,9 @@ const { getProducts,createProduct,putProduct,deleteProduct } = initProductContro
 //users
 const userModel = initUserModel(db);
 const {getUsers,createUsers,putUsers,deleteUsers} = initUserController(userModel);
-
+//auth
+const authModel = initAuthModel(db);
+const{login,register} = initAuthController(authModel);
 
 
 // Tạo route
@@ -44,9 +50,14 @@ app.use('/api/products', productRoutes);
 const userRoutes = crudUserRoutes(getUsers,createUsers,putUsers,deleteUsers);
 app.use('/api/users',userRoutes);
 
+//auth
+const authRoutes = crRoutes(login,register);
+app.use('/api/auth',authRoutes);
+
 
 // Route gốc
 app.get("/", (req, res) => {
+  
   res.send("Welcome to Nodejs API");
 });
 

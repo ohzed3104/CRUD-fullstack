@@ -11,21 +11,21 @@ export const initUserController = (model) => {
                 res.status(500).json({message : error.message});
             }
         },
-        createUsers : async (req,res) => {
-            try {
-                const {id,name,email,password,role}= req.body;
-                if(!name||!email||!password){
-                    return res.status(400).json({message : "Thiếu thông tin người dùng"});
-                }
-                const result = await userModel.create(id,name,email,password,role);
-                res.status(201).json({
-                    message : result.message,
-                    userId : result.insertId
-                });
-            } catch (error) {
-                res.status(500).json({message : error.message});
-            }
-        },
+        // createUsers : async (req,res) => {
+        //     try {
+        //         const {id,name,email,password,role}= req.body;
+        //         if(!name||!email||!password){
+        //             return res.status(400).json({message : "Thiếu thông tin người dùng"});
+        //         }
+        //         const result = await userModel.create(id,name,email,password,role);
+        //         res.status(201).json({
+        //             message : result.message,
+        //             userId : result.insertId
+        //         });
+        //     } catch (error) {
+        //         res.status(500).json({message : error.message});
+        //     }
+        // },
         putUsers : async (req,res) => {
             try {
                 const {id} = req.params;
