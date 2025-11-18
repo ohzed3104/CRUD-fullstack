@@ -38,7 +38,7 @@ const userModel = initUserModel(db);
 const {getUsers,createUsers,putUsers,deleteUsers} = initUserController(userModel);
 //auth
 const authModel = initAuthModel(db);
-const{login,register} = initAuthController(authModel);
+const{login,register,getAccount} = initAuthController(authModel);
 
 
 // Tạo route
@@ -51,7 +51,7 @@ const userRoutes = crudUserRoutes(getUsers,createUsers,putUsers,deleteUsers);
 app.use('/api/users',userRoutes);
 
 //auth
-const authRoutes = crRoutes(login,register);
+const authRoutes = crRoutes(login,register,getAccount);
 app.use('/api/auth',authRoutes);
 
 

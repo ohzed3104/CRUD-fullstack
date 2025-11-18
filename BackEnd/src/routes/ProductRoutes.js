@@ -1,8 +1,10 @@
 // src/routes/ProductRoutes.js
 import express from 'express';
+import JwtUser from '../middleware/jwtUser.js'; 
 
 const crudProductRoutes = (getProducts,createProduct,putProduct,deleteProduct) => {
   const router = express.Router();
+  router.use(JwtUser);
   router.get('/', getProducts);
   router.post('/add', createProduct);
   router.put('/update/:id',putProduct)

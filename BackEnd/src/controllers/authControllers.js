@@ -61,6 +61,9 @@ export const initAuthController = (model) => {
             } catch (error) {
                 res.status(500).json({message : error.message});
             }
+        },
+        getAccount : async (req,res) => {
+            return res.status(200).json(req.user);
         }
 
 }
