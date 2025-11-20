@@ -21,9 +21,9 @@ const JwtUser = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user =  {
       email : decoded.email,
-      name : decoded.name,
+      role: decoded.role  
     }
-    console.log("Decoded JWT:", decoded); 
+    console.log("Decoded JWT:", req.user); 
     return next();
   } catch (err) {
     return res.status(401).json({ message: 'Unauthorized ' });

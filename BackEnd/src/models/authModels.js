@@ -5,7 +5,7 @@ export const initAuthModel = (connection) => {
     db = connection;
     return {
         login : async (email,password) => {
-            const sql = 'SELECT id,name,email,password FROM users WHERE email = ?';
+            const sql = 'SELECT id,name,email,password,role FROM users WHERE email = ?';
             const [rows] = await db.query(sql,[email]);
             if(rows.length ===0){
                 throw new Error("Email hoặc mật khẩu không đúng");
@@ -19,7 +19,8 @@ export const initAuthModel = (connection) => {
                 return {
                 id : user.id,
                 name : user.name,
-                email : user.email
+                email : user.email, 
+                role: user.role
             }
             },
             
