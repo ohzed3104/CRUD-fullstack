@@ -5,18 +5,35 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 
 import connectDB from "./config/db.js";
-//product
+
+// Product
 import { initProductModel } from "./models/ProductModels.js";
 import { initProductController } from "./controllers/ProductControllers.js";
 import crudProductRoutes from "./routes/ProductRoutes.js";
-//users
+
+// Users
 import { initUserModel } from "./models/UserModels.js";
 import { initUserController } from "./controllers/UserControllers.js";
 import crudUserRoutes from "./routes/UserRoutes.js";
-//auth
+
+// Auth
 import { initAuthModel } from "./models/authModels.js";
 import { initAuthController } from "./controllers/authControllers.js";
 import crRoutes from "./routes/authRoutes.js";
+
+// Friend Request
+import { friendReqRoutes } from "./routes/FriendReqRoutes.js";
+import { initFriendReqModel } from "./models/FriendReqModels.js";
+import { initFriendReqController } from "./controllers/FriendReqControllers.js";
+
+// Message
+import { MessageRoutes } from "./routes/MessageRoutes.js";
+import { initMessageModel } from "./models/MessageModels.js";
+import { initMessageController } from "./controllers/MessageController.js"; // SỬA: Controller → không có "s"
+
+import swaggerUI from "swagger-ui-express";
+import fs from "fs";
+
 dotenv.config();
 
 const app = express();
@@ -25,39 +42,53 @@ const app = express();
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
+// Swagger setup
+const swaggerDocument = JSON.parse(fs.readFileSync("./BackEnd/src/swagger.json"));
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 // Kết nối DB
 const db = await connectDB();
 
-// Khởi tạo model & controller
-//product
+// === KHỞI TẠO MODEL & CONTROLLER ===
+
+// Product
 const productModel = initProductModel(db);
-const { getProducts,createProduct,putProduct,deleteProduct } = initProductController(productModel);
-//users
+const { getProducts, createProduct, putProduct, deleteProduct } = initProductController(productModel);
+
+// Users
 const userModel = initUserModel(db);
-const {getUsers,createUsers,putUsers,deleteUsers} = initUserController(userModel);
-//auth
+const { getUsers, createUsers, putUsers, deleteUsers } = initUserController(userModel);
+
+// Auth
 const authModel = initAuthModel(db);
-const{login,register,getAccount} = initAuthController(authModel);
+const { login, register, getAccount } = initAuthController(authModel); // SỬA: thêm khoảng trắng
 
+// Friend Request
+const friendReqModel = initFriendReqModel(db);
+const { postFriendReq, getFriendReqs, postToFriendReq,getAllFriends } = initFriendReqController(friendReqModel);
 
-// Tạo route
-//product
-const productRoutes = crudProductRoutes(getProducts,createProduct,putProduct,deleteProduct);
+// Message
+const messageModel = initMessageModel(db);
+const { sendDirectMess } = initMessageController(messageModel);
+
+// === ROUTES ===
+const productRoutes = crudProductRoutes(getProducts, createProduct, putProduct, deleteProduct);
 app.use('/api/products', productRoutes);
 
-//users
-const userRoutes = crudUserRoutes(getUsers,createUsers,putUsers,deleteUsers);
-app.use('/api/users',userRoutes);
+const userRoutes = crudUserRoutes(getUsers, createUsers, putUsers, deleteUsers);
+app.use('/api/users', userRoutes);
 
-//auth
-const authRoutes = crRoutes(login,register,getAccount);
-app.use('/api/auth',authRoutes);
+const authRoutes = crRoutes(login, register, getAccount);
+app.use('/api/auth', authRoutes);
 
+const friendRoutes = friendReqRoutes(postFriendReq, getFriendReqs, postToFriendReq,getAllFriends);
+app.use('/api/friends', friendRoutes);
+
+const messageRoutes = MessageRoutes(sendDirectMess);
+app.use('/api/messages', messageRoutes);
 
 // Route gốc
 app.get("/", (req, res) => {
-  
   res.send("Welcome to Nodejs API");
 });
 

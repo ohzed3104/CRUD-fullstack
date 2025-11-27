@@ -7,7 +7,7 @@ export const initProductModel = (connection) => {
 
   return {
     getALL: async () => {
-      const [rows] = await db.query('SELECT * FROM products'); // SỬA: query, KHÔNG PHẢI qurey
+      const [rows] = await db.query('SELECT * FROM products'); 
       return rows;
     },
     create: async (name, price, description) => {
