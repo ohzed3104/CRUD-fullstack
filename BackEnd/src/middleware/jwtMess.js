@@ -2,7 +2,7 @@ import connectDB from "../config/db.js";
 
 let db;
 (async () => {
-  db = await connectDB();  // lấy connection (chỉ chạy 1 lần)
+  db = await connectDB();  
 })();
 
 const pair = (a, b) => (a < b ? [a, b] : [b, a]);

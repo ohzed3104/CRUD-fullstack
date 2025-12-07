@@ -9,12 +9,11 @@ export const initMessageController = (model) => {
         const fromUserId = req.user.id;
         const { toUserId, content } = req.body;
 
-        // === KIỂM TRA DỮ LIỆU ===
+        
         if (!toUserId || !content) {
             return res.status(400).json({ message: "Thiếu thông tin người nhận hoặc nội dung" });
         }
 
-        // KIỂM TRA toUserId LÀ SỐ
         const toUserIdNum = parseInt(toUserId, 10);
         if (isNaN(toUserIdNum) || toUserIdNum <= 0) {
             return res.status(400).json({ message: "toUserId phải là số nguyên dương" });
@@ -24,7 +23,7 @@ export const initMessageController = (model) => {
             return res.status(400).json({ message: "Không thể gửi tin nhắn cho chính mình" });
         }
 
-        // 1. Tìm hoặc tạo conversation
+        //  Tìm hoặc tạo conversation
         let conversation = await MessageModel.getConversationBetweenUsers(fromUserId, toUserIdNum);
         if (!conversation) {
             conversation = await MessageModel.createConversation(fromUserId, toUserIdNum);
@@ -32,15 +31,15 @@ export const initMessageController = (model) => {
 
         const conversationId = conversation.id;
 
-        // 2. Tạo tin nhắn
+        //  Tạo tin nhắn
         const newMessage = await MessageModel.createMessage(
             conversationId,
             fromUserId,
-            toUserIdNum,  // DÙNG SỐ
+            toUserIdNum,  
             content
         );
 
-        // 3. Cập nhật last message
+        // Cập nhật last message
         await MessageModel.updateConversation(conversationId, {
             lastMessage: content,
             lastSenderId: fromUserId

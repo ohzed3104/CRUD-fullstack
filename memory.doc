@@ -1,0 +1,42 @@
+18/11/2025
+ middleware + f5 refresh token 
+
+de su dung middleware  
+
+co ham : const JwtUser = (req, res, next) => { }
+next ở đây là khi req xog thi middle check hoặc do smth rồi mới next qua res 
+ 
+de su dung middleware voi access_token  toan app tru logiin register 
+router.use();  khoi tao dau tien cho  tat ca routes
+
++lay ra TOKEN hop le  khong phai  bearer  (req.headers.authorization)
+const authHeader = req.headers.authorization
+
+su dung if else check xem la co authHeader(token) hay khong
+ khong thi tra loi 401 
+ co thi lay token const token = authHeader.split(' ')[1];  (khong thi co the  req.headers.authorization.split(' ')[1]; split de cat chu bearer o dau di)
+co token hop le (1) ( de biet nguoi dung la ai chung ta can verify no   jwt.verify(token, process.env.JWT_SECRET); )
+try 
+   khoi tao bien   const decoded = jwt.verify(token, process.env.JWT_SECRET); dung de refresh token
+   tao req.user  tra ve email va name voi email.decoded name.decoded dung de refresh token 
+   sau day moi cho req chay tiep tuc la  next () (1) 
+catch 
+tra ve loi 401 
+voi login register de sever khong check token cua 2 api nay 
+khoi tao  
+const whitelist = ['/api/auth/login', '/api/auth/register']; voi cac routes  gap thi next()
+
+  if (whitelist.includes(req.originalUrl)) {     neu co trong whitelist thi tra ve next  includes array tra ve gia tri co ton tai hay khong 
+    return next();
+  }
+  19-20 /11/2025
+  them middleware :
+  nhan vao role cua user de cap phep truy cap 
+  export const jwtRole = (role) => {
+    return (req,res,next) => {
+        if(!role.includes(req.user.role)){
+            return res.status(403).json({message: 'You dont have permission'});
+    }
+    next();
+}
+}

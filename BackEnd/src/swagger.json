@@ -18,7 +18,28 @@
       "get": {
         "summary": "Lay ra danh sach users",
         "tags": [],
-        "responses": {},
+        "responses": {
+          "200": {
+            "description": "Danh sách users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "name": { "type": "string" },
+                      "email": { "type": "string", "format": "email" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" },
+          "500": { "description": "Server error" }
+        },
         "security": [
           {
             "BearerAuth": []
@@ -51,7 +72,25 @@
       "delete": {
         "summary": "xoa users",
         "tags": [],
-        "responses": {},
+        "responses": {
+          "200": {
+            "description": "User deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" },
+          "404": { "description": "User not found" },
+          "500": { "description": "Server error" }
+        },
         "security": [
           {
             "BearerAuth": []
@@ -73,17 +112,30 @@
         "summary": "dang nhap",
         "tags": [],
         "responses": {
-            "200": {
-                "description": "Successful login"
-            },
-            "401": {
-                "description": "Unauthorized"
-            },
-            "500": {
-                "description": "Server error"
+          "200": {
+            "description": "Successful login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": { "type": "string" },
+                    "refreshToken": { "type": "string" },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "integer" },
+                        "email": { "type": "string", "format": "email" },
+                        "name": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
             }
-
-            
+          },
+          "401": { "description": "Unauthorized" },
+          "500": { "description": "Server error" }
         },
         "security": [
           {
@@ -115,7 +167,26 @@
       "post": {
         "summary": "gui loi moi ket ban",
         "tags": [],
-        "responses": {},
+        "responses": {
+          "201": {
+            "description": "Friend request sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "requestId": { "type": "integer" },
+                    "status": { "type": "string" },
+                    "toUserId": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Bad request" },
+          "401": { "description": "Unauthorized" },
+          "500": { "description": "Server error" }
+        },
         "security": [
           {
             "BearerAuth": []
@@ -142,7 +213,29 @@
       "get": {
         "summary": "lay ra danh sach loi moi",
         "tags": [],
-        "responses": {},
+        "responses": {
+          "200": {
+            "description": "Danh sách lời mời",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "requestId": { "type": "integer" },
+                      "fromUserId": { "type": "integer" },
+                      "fromName": { "type": "string" },
+                      "createdAt": { "type": "string", "format": "date-time" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" },
+          "500": { "description": "Server error" }
+        },
         "security": [
           {
             "BearerAuth": []
@@ -154,7 +247,27 @@
       "post": {
         "summary": "chap nhan loi moi",
         "tags": [],
-        "responses": {},
+        "responses": {
+          "200": {
+            "description": "Responded to friend request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "requestId": { "type": "integer" },
+                    "action": { "type": "string" },
+                    "status": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Bad request" },
+          "401": { "description": "Unauthorized" },
+          "404": { "description": "Request not found" },
+          "500": { "description": "Server error" }
+        },
         "security": [
           {
             "BearerAuth": []
@@ -180,7 +293,27 @@
       "post": {
         "summary": "gui tin nhan",
         "tags": [],
-        "responses": {},
+        "responses": {
+          "201": {
+            "description": "Message created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "messageId": { "type": "integer" },
+                    "toUserId": { "type": "integer" },
+                    "content": { "type": "string" },
+                    "createdAt": { "type": "string", "format": "date-time" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Bad request" },
+          "401": { "description": "Unauthorized" },
+          "500": { "description": "Server error" }
+        },
         "security": [
           {
             "BearerAuth": []
@@ -209,7 +342,27 @@
       "post": {
         "summary": "dang ky",
         "tags": [],
-        "responses": {},
+        "responses": {
+          "201": {
+            "description": "User registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "email": { "type": "string", "format": "email" },
+                    "name": { "type": "string" },
+                    "role": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Bad request / Validation error" },
+          "409": { "description": "Email already exists" },
+          "500": { "description": "Server error" }
+        },
         "requestBody": {
           "content": {
             "application/json": {
@@ -241,7 +394,28 @@
       "get": {
         "summary": "lay danh sach ban be",
         "tags": [],
-        "responses": {},
+        "responses": {
+          "200": {
+            "description": "Danh sách bạn bè",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "name": { "type": "string" },
+                      "email": { "type": "string", "format": "email" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" },
+          "500": { "description": "Server error" }
+        },
         "security": [
           {
             "BearerAuth": []
@@ -253,7 +427,24 @@
       "get": {
         "summary": "refresh token",
         "tags": [],
-        "responses": {},
+        "responses": {
+          "200": {
+            "description": "New tokens returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": { "type": "string" },
+                    "refreshToken": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Invalid refresh token" },
+          "500": { "description": "Server error" }
+        },
         "security": [
           {
             "BearerAuth": []
@@ -265,7 +456,29 @@
       "get": {
         "summary": "lay toan bo san pham",
         "tags": [],
-        "responses": {},
+        "responses": {
+          "200": {
+            "description": "Danh sách sản phẩm",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "name": { "type": "string" },
+                      "price": { "type": "number" },
+                      "description": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" },
+          "500": { "description": "Server error" }
+        },
         "security": [
           {
             "BearerAuth": []
@@ -277,7 +490,27 @@
       "post": {
         "summary": "tao san pham",
         "tags": [],
-        "responses": {},
+        "responses": {
+          "201": {
+            "description": "Product created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "price": { "type": "number" },
+                    "description": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Bad request" },
+          "401": { "description": "Unauthorized" },
+          "500": { "description": "Server error" }
+        },
         "security": [
           {
             "BearerAuth": []
@@ -310,7 +543,28 @@
       "put": {
         "summary": "update san pham",
         "tags": [],
-        "responses": {},
+        "responses": {
+          "200": {
+            "description": "Product updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "price": { "type": "number" },
+                    "description": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Bad request" },
+          "401": { "description": "Unauthorized" },
+          "404": { "description": "Product not found" },
+          "500": { "description": "Server error" }
+        },
         "security": [
           {
             "BearerAuth": []
@@ -343,11 +597,26 @@
       "get": {
         "summary": "xoa san pham",
         "tags": [],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Root endpoint response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     }
   },
-   "components": {
+  "components": {
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",

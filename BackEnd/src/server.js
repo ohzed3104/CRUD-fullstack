@@ -44,7 +44,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 // Swagger setup
 const swaggerDocument = JSON.parse(fs.readFileSync("./BackEnd/src/swagger.json"));
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 // Kết nối DB
 const db = await connectDB();
@@ -53,7 +53,7 @@ const db = await connectDB();
 
 // Product
 const productModel = initProductModel(db);
-const { getProducts, createProduct, putProduct, deleteProduct } = initProductController(productModel);
+const { getProducts, createProduct, putProduct, deleteProduct, getProductById } = initProductController(productModel);
 
 // Users
 const userModel = initUserModel(db);
@@ -72,7 +72,7 @@ const messageModel = initMessageModel(db);
 const { sendDirectMess } = initMessageController(messageModel);
 
 // === ROUTES ===
-const productRoutes = crudProductRoutes(getProducts, createProduct, putProduct, deleteProduct);
+const productRoutes = crudProductRoutes(getProducts, createProduct, putProduct, deleteProduct, getProductById);
 app.use('/api/products', productRoutes);
 
 const userRoutes = crudUserRoutes(getUsers, createUsers, putUsers, deleteUsers);
