@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { 
   Home, Package, Users, MessageSquare, Heart, LogOut, Box,
-  User, Send, Bell, Store, MessageCircle, Phone, Zap, Shield
+  User, Send, Bell, Store, MessageCircle, Phone, Zap, Shield,
+  ChevronDown
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import useAuth from "../hooks/useAuth";
 
 export const HomePage = () => {
   const navigate = useNavigate();
-
+  const {logout} = useAuth();
   // STATES
   const [product, setProduct] = useState([]);
   const [popup, setPopup] = useState(false);
@@ -22,14 +24,16 @@ export const HomePage = () => {
   const [newName, setNewName] = useState("");
   const [newPrice, setNewPrice] = useState("");
   const [newDiscrep, setNewDiscrep] = useState("");
-
+  //menu
+  const [open, setOpen] = useState(false);
   // HANDLE EDIT
   const handleEdit = (id) => {
     setIdProd(id);
     setNewPopup(true);
     document.body.classList.add("overflow-hidden");
   };
-
+ //get user from context
+ const {user} = useAuth();
   // Fetch product details for editing
   useEffect(() => {
     if (!IdProd) return;
@@ -139,22 +143,61 @@ export const HomePage = () => {
   return (
     <>
       {/* HEADER */}
-      <div className="w-full min-h-12 md:min-h-20 lg:min-h-17 flex justify-between items-center px-90 border-b border-gray-300 overflow-hidden">
+      <div className="w-full min-h-12 md:min-h-20 lg:min-h-17 flex justify-between items-center px-90 border-b border-gray-300 ">
         <div className="flex items-center font-bold">
           <Store className="w-10 h-8" /> Old Store
         </div>
-        <nav className="space-x-6 flex items-center">
-          <a>San Pham</a>
-          <div className="flex items-center">
-            <MessageCircle className="w-10 h-6 px-2" /> chat
-          </div>
+        <nav className="space-x-6 flex items-center  relative">
+  <a>San Pham</a>
+
+  <div className="flex items-center">
+    <MessageCircle className="w-10 h-6 px-2" /> chat
+  </div>
+
+  {user ? (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1 font-semibold hover:text-blue-600"
+      >
+        Xin chào, {user.name}
+        <ChevronDown size={16} />
+      </button>
+
+      {open && (
+        <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg border rounded-md py-2 z-50 animate-fadeIn">
           <button
-            onClick={() => navigate("/login")}
-            className="bg-blue-500 text-white cursor-pointer font-semibold rounded-md px-5 py-2 text-md"
+            onClick={() => {
+              setOpen(false)
+              navigate("/profile")
+            }}
+            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
           >
-            Dang nhap
+            Hồ sơ
           </button>
-        </nav>
+
+          <button
+            onClick={() => {
+              setOpen(false)
+              logout()
+            }}
+            className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500"
+          >
+            Đăng xuất
+          </button>
+        </div>
+      )}
+    </div>
+  ) : (
+    <button
+      onClick={() => navigate("/login")}
+      className="bg-blue-500 text-white cursor-pointer font-semibold rounded-md px-5 py-2 text-md"
+    >
+      Đăng nhập
+    </button>
+  )}
+</nav>
+
       </div>
 
       {/* HERO SECTION */}
@@ -249,6 +292,9 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
+
+     
+      
 
       {/* ADD PRODUCT POPUP */}
       {popup && (

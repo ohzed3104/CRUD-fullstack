@@ -1,16 +1,14 @@
-import { useState } from "react";
+import {  useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-
+import useAuth from "../hooks/useAuth";
 function useHookLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const authCtx = useAuth(); // guard: nếu Provider chưa mount thì null
-  const login = authCtx?.login;
+  const {login} = useAuth();
+  
 
   const handleLogin = async (e) => {
     e?.preventDefault?.();
@@ -19,9 +17,9 @@ function useHookLogin() {
     try {
       const payload = { email, password };
       const res = await axios.post("http://localhost:3000/api/auth/login", payload);
-      const data = res.data ?? {};
-      const token = data.token ?? data.accessToken ?? data.access_token ?? null;
-      const user = data.user ?? data.data ?? null;
+      const data = res.data ;
+      const token = data.access_token;
+      const user = data.user ;
 
       if (!token) {
         setLoading(false);
@@ -29,7 +27,6 @@ function useHookLogin() {
       }
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      localStorage.setItem("token", token);
       localStorage.setItem("access_token", token);
       if (user) localStorage.setItem("user", JSON.stringify(user));
 

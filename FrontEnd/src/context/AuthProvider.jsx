@@ -1,39 +1,33 @@
-import React, { useState, useEffect } from "react";
+import {  useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
+export const AuthProvider = ({children}) => {
+ const [user, setUser] = useState(null);
+ const [token, setToken] = useState(null);
+ const [loading, setLoading] = useState(true);
 
-export default function AuthProvider({ children }) {
-  const [auth, setAuth] = useState({ user: null, token: null, loading: true });
+ useEffect(()=>{
+  const storetoken = localStorage.getItem("access_token");
+  const storeuser = localStorage.getItem("user");
+  if(storetoken&&storeuser){
+    setToken(storetoken)
+    setUser(JSON.parse(storeuser))
+  }
+  setLoading(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token") || localStorage.getItem("access_token");
-    const user = localStorage.getItem("user");
-    if (token) {
-      setAuth({ user: user ? JSON.parse(user) : null, token, loading: false });
-    } else {
-      setAuth({ user: null, token: null, loading: false });
-    }
-  }, []);
-
-  const login = ({ user, token }) => {
-    if (token) {
-      localStorage.setItem("token", token);
-      localStorage.setItem("access_token", token);
-    }
-    if (user) localStorage.setItem("user", JSON.stringify(user));
-    setAuth({ user: user ?? null, token: token ?? null, loading: false });
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("user");
-    setAuth({ user: null, token: null, loading: false });
-  };
-
-  return (
-    <AuthContext.Provider value={{ auth, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+ },[])
+ const login = ({user,token}) => {
+  setUser(user);
+  setToken(token);
+ }
+ const logout = () => {
+  setUser(null);
+  setToken(null);
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("user");
+ }
+  return(
+    <AuthContext.Provider value={{user,token,loading,login,logout}}>
+    {children}
+  </AuthContext.Provider>
+  ) 
 }
-
